@@ -1,0 +1,7 @@
+# English strings go here for Rails i18n
+en:
+  # my_label: "My label"
+  field_is_sidejob: "지원"
+  field_is_bug: "버그"
+  field_is_patchnote: "패치노트"
+  field_is_exception: "예외"
