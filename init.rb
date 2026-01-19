@@ -1,6 +1,6 @@
 Redmine::Plugin.register :redmine_tx_advanced_tracker do
   name 'Redmine Tx Advanced Tracker plugin'
-  author 'Author name'
+  author 'KiHyun Kang'
   description 'This is a plugin for Redmine'
   version '0.0.1'
   url 'http://example.com/path/to/plugin'
