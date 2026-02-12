@@ -8,7 +8,10 @@ class TxAdvancedTrackerHook < Redmine::Hook::ViewListener
         o = <<EOS
         <script>
           $(function() {
-            var header_objs = $('<th>#{l(:field_is_in_roadmap)}</th><th>#{l(:field_is_sidejob)}</th><th>#{l(:field_is_bug)}</th><th>#{l(:field_is_patchnote)}</th><th>#{l(:field_is_exception)}</th>');
+            var $table = $('table.trackers');
+            if (!$table.length) return;
+
+            var headers = $('<th>#{l(:field_is_in_roadmap)}</th><th>#{l(:field_is_sidejob)}</th><th>#{l(:field_is_bug)}</th><th>#{l(:field_is_patchnote)}</th><th>#{l(:field_is_exception)}</th>');
 
             // 데이터 준비
             var trackers = #{ trackers.map { |tracker| [
@@ -19,9 +22,19 @@ class TxAdvancedTrackerHook < Redmine::Hook::ViewListener
               tracker.is_exception ? "🚫" : ""
             ] }.to_json };
 
-            header_objs.insertAfter($('table.trackers thead tr th')[1]);
-            $('table.trackers tbody tr').slice(0).find('td:eq(2)').each(function(index, element) {
-              $(element).before($('<td>'+trackers[index][0]+'</td><td>'+trackers[index][1]+'</td><td>'+trackers[index][2]+'</td><td>'+trackers[index][3]+'</td><td>'+trackers[index][4]+'</td>'));
+            // 헤더: 설명(Description) 컬럼 앞에 삽입
+            var $descHeader = $table.find('thead th').filter(function() {
+              return $(this).text().trim() === '#{l(:field_description)}';
+            });
+            if ($descHeader.length) {
+              $descHeader.before(headers);
+            }
+
+            // 바디: td.description 앞에 삽입
+            $table.find('tbody tr').each(function(index) {
+              var $descCell = $(this).find('td.description');
+              if (!$descCell.length) return;
+              $descCell.before('<td>'+trackers[index][0]+'</td><td>'+trackers[index][1]+'</td><td>'+trackers[index][2]+'</td><td>'+trackers[index][3]+'</td><td>'+trackers[index][4]+'</td>');
             });
           });
         </script>
